@@ -1,0 +1,256 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+!*.ipynb  # Uncomment if you want to track notebooks
+*/.ipynb_checkpoints/*
+
+# Data files (usually too large for git)
+*.csv
+*.xls
+*.xlsx
+*.json
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.data
+*.db
+*.sqlite
+*.sqlite3
+*.db3
+
+# Machine Learning Models
+*.model
+*.pt
+*.pth
+*.onnx
+*.pb
+*.tflite
+*.mlmodel
+
+# Large files
+*.npy
+*.npz
+*.arrow
+*.bin
+
+# Output directories
+output/
+outputs/
+data/
+datasets/
+raw_data/
+processed_data/
+interim_data/
+external_data/
+
+# Model checkpoints
+checkpoints/
+lightning_logs/
+mlruns/
+wandb/
+runs/
+
+# Logs
+logs/
+*.log
+*.log.*
+tensorboard_logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.nox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+cover/
+
+# Sphinx documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# dask worker logs
+dask-worker-space/
+
+# MLflow
+mlflow/
+
+# DVC (Data Version Control)
+.dvc/
+**/*.dvc
+**/data/
+**/*.dvc.lock
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.*.yml
+
+# Experiment tracking
+experiments/
+results/
+**/wandb/
+comet_artifacts/
+neptune/
+
+# Cache directories
+*.cache
+.cache/
+*.pyc
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.lnk
+
+# Secrets and keys
+*.pem
+*.key
+*.crt
+*.cert
+secrets/
+keys/
+
+# Cloud specific
+.gcloud/
+.aws/
+.azure/
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# Example data/config files - keep templates but not actual data
+config_local.yaml
+config_local.yml
+secrets.yaml
+secrets.yml
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+# Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Custom ML project directories
+artifacts/
+assets/
+models/
+model_repository/
+onnx_models/
+tensorflow_models/
+pytorch_models/
+checkpoint-*/
+**/saved_model/
+**/variables/
+**/assets/
+**/keras/
