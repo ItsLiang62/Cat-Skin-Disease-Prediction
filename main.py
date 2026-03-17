@@ -1,46 +1,23 @@
-import os
-from torch.utils.data import Dataset
-from PIL import Image
+from classes import ImageDataset
+from functions import get_mean_std
+import torchvision.transforms.v2 as v2
+import torch
 
-class ImageDataset(Dataset):
-    def __init__(self, root_dir, transform=None):
-        self.root_dir = root_dir
-        self.transform = transform
 
-        # Image classes = Names of subfolders in root image folder
-        self.classes = sorted([d for d in os.listdir(root_dir)
-                               if os.path.isdir(os.path.join(root_dir, d))])
+if __name__ == "__main__":
+    dataset = ImageDataset("Cat-Skin-Disease")
 
-        # Map classes to numbers for easy labeling
-        self.class_to_idx = {class_name: idx for idx, class_name in enumerate(self.classes)}
+    base_transform = v2.Compose([
+        v2.Resize((224, 224)),
+        v2.ToImage(),
+        v2.ToDtype(torch.float32, scale=True)
+    ])
 
-        # Raw input images and their labels
-        self.images = []
-        self.image_to_label = {}
+    mean_each_channel, std_each_channel = get_mean_std(dataset, base_transform)
 
-        for class_name in self.classes:
-            class_dir = os.path.join(root_dir, class_name)
-            label = self.class_to_idx[class_name]
+    dataset.transform = v2.Compose([
+        base_transform,
+        v2.Normalize(mean_each_channel, std_each_channel)
+    ])
 
-            for image_name in os.listdir(class_dir):
-                # Accept only selected image file types
-                if image_name.lower().endswith(('.png', '.jpg', '.jpeg')):
-                    image_path = os.path.join(root_dir, class_dir, image_name)
-                    self.images.append(image_path)
-                    self.image_to_label[image_path] = label
-
-    def __len__(self):
-        return len(self.image_to_label)
-
-    def __getitem__(self, idx):
-        image_path = self.images[idx]
-        label = self.image_to_label[image_path]
-
-        image = Image.open(image_path)
-        if image.mode != 'RGB':
-            image = image.convert('RGB')
-
-        if self.transform:
-            image = self.transform(image)
-
-        return image, label
+    print(dataset.__getitem__(0))
