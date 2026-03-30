@@ -1,6 +1,7 @@
 import os
 from torch.utils.data import Dataset
 from PIL import Image
+from torch import nn
 
 class ImageDataset(Dataset):
     def __init__(self, root_dir):
@@ -44,3 +45,32 @@ class ImageDataset(Dataset):
             image = self.transform(image)
 
         return image, label
+
+class NeuralNetwork(nn.Module):
+    def __init__(self, image_size):
+        super().__init__()
+
+        # Flatten image tensor
+        self.flatten = nn.Flatten()
+        self.linear_relu_stack = nn.Sequential(
+
+            # First layer
+            # Linear layer
+            # Input count = RGB image tensor element count
+            nn.Linear(3*image_size**2, 512),
+
+            # ReLU activation function to introduce non-linearity
+            nn.ReLU(),
+
+            # Second layer
+            nn.Linear(512, 224),
+            nn.ReLU(),
+
+            # Third and final layer
+            nn.Linear(224, 4)
+        )
+
+    def forward(self, x):
+        x = self.flatten(x)
+        logits = self.linear_relu_stack(x)
+        return logits
