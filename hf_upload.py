@@ -7,3 +7,6 @@ def main():
         repo_id="ItsLiang/Cat-Skin-Disease-Prediction",
         repo_type="model"
     )
+
+if __name__ == "__main__":
+    main()
