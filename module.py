@@ -1,7 +1,11 @@
 import os
-from torch.utils.data import Dataset
-from PIL import Image
+import torch
+import torchvision.transforms.v2 as v2
 from torch import nn
+from torch.utils.data import Dataset, DataLoader
+from PIL import Image
+
+image_size = 224
 
 class ImageDataset(Dataset):
     def __init__(self, root_dir):
@@ -14,6 +18,7 @@ class ImageDataset(Dataset):
 
         # Map classes to numbers for easy labeling
         self.class_to_label = {class_name: label for label, class_name in enumerate(self.classes)}
+        self.label_to_class = {label: class_name for label, class_name in enumerate(self.classes)}
 
         # Raw input images and their labels
         self.images = []
@@ -47,7 +52,7 @@ class ImageDataset(Dataset):
         return image, label
 
 class NeuralNetwork(nn.Module):
-    def __init__(self, image_size):
+    def __init__(self):
         super().__init__()
 
         # Flatten image tensor
@@ -74,3 +79,49 @@ class NeuralNetwork(nn.Module):
         x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits
+
+def get_mean_std(dataset, transform):
+    dataset.transform = transform
+    dataloader = DataLoader(dataset, batch_size=32, shuffle=False)
+
+    total_sum_each_channel = torch.zeros(3)
+
+    # To calculate variance = (sum of squares / n) - (mean) ** 2
+    total_sum_sq_each_channel = torch.zeros(3)
+
+    # Every channel has same total pixels count
+    total_pixels = 0
+
+    for batch, _ in dataloader:
+        batch_size, channels_per_image, rows_per_channel, cols_per_row = batch.shape
+        batch = batch.view(batch_size, channels_per_image, -1)
+        batch_sum_each_channel = batch.sum(dim=[0, 2])
+        batch_sum_sq_each_channel = (batch**2).sum(dim=[0, 2])
+
+        total_sum_each_channel += batch_sum_each_channel
+        total_sum_sq_each_channel += batch_sum_sq_each_channel
+        total_pixels += batch_size * rows_per_channel * cols_per_row
+
+    mean_each_channel = total_sum_each_channel / total_pixels
+    var_each_channel = total_sum_sq_each_channel / total_pixels - mean_each_channel ** 2
+    std_each_channel = torch.sqrt(var_each_channel)
+
+    return mean_each_channel, std_each_channel
+
+train_dataset = ImageDataset("Cat-Skin-Disease/Training")
+val_dataset = ImageDataset("Cat-Skin-Disease/Validation")
+
+base_transform = v2.Compose([
+    v2.Resize((image_size, image_size)),
+    v2.ToImage(),
+    v2.ToDtype(torch.float32, scale=True)
+])
+
+mean_std_each_channel = get_mean_std(train_dataset, base_transform)
+
+train_dataset.transform = v2.Compose([
+    base_transform,
+    v2.Normalize(*mean_std_each_channel)
+])
+
+val_dataset.transform = train_dataset.transform
